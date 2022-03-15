@@ -7,13 +7,10 @@
       <p><b>status:</b> {{task.statusId}}</p>
     </div>
     <div class="col-1">
-      <button class="btn btn-success m-1">
-                    <span class="material-icons"
-                          onclick="">
-                        done</span>
+      <button *ngIf="isNotDone()" class="btn btn-success m-1" (click)="done()">
+                    <span class="material-icons">done</span>
       </button>
-      <button class="btn btn-light m-1"
-              onclick="">
+      <button class="btn btn-light m-1" (click)="delete()">
         <span class="material-icons">delete</span>
       </button>
     </div>

@@ -9,7 +9,7 @@ import {PlannedTask} from "../model/Task";
 })
 export class TaskApiService {
 
-  private readonly url = 'http://localhost:8080/tasks?';  // URL to web api for getting tasks
+  private readonly url = 'http://localhost:8080/tasks';  // URL to web api for getting tasks
   private  readonly statusParamenter = '&status='
 
   constructor(private http: HttpClient) { }
@@ -20,5 +20,14 @@ export class TaskApiService {
 
   getTasksByStatus(status: string) {
     return this.http.get <PlannedTask[]>(this.url + '?' + this.statusParamenter + status);
+  }
+
+  delete(id: number): Observable<any>{
+    return this.http.delete(this.url + '/' + id.toString(10));
+  }
+
+
+  done(id: number): Observable<any> {
+    return this.http.put(this.url + '/' + id.toString(10), "");
   }
 }

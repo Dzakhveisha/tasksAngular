@@ -29,4 +29,10 @@ export class MainPageComponent implements OnInit {
       .subscribe((result: PlannedTask[]) =>
         this.tasks = result);
   }
+
+  deleteTask(task: PlannedTask) {
+    this.tasks.forEach((el, i) => {
+      if (el.id == task.id) this.tasks.splice(i, 1)
+    })
+  }
 }
