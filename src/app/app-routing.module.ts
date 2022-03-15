@@ -1,7 +1,13 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import {MainPageComponent} from "./main-page/main-page.component";
+import {CreateTaskFormComponent} from "./create-task-form/create-task-form.component";
 
-const routes: Routes = [];
+const routes: Routes = [
+  {path: '', component: MainPageComponent},
+  {path: 'taskList', component: MainPageComponent},
+  {path: 'createTask', component: CreateTaskFormComponent}
+];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
