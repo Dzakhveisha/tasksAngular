@@ -1,8 +1,10 @@
+import {TaskStatus} from "./TaskStatus";
+
 export interface PlannedTask{
   id : number;
   name: string;
   description: string;
-  statusId: number;
+  statusId: TaskStatus;
   deadline: string;
   fileName: string;
 }

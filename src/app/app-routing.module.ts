@@ -6,7 +6,7 @@ import {CreateTaskFormComponent} from "./create-task-form/create-task-form.compo
 const routes: Routes = [
   {path: '', component: MainPageComponent},
   {path: 'taskList', component: MainPageComponent},
-  {path: 'createTask', component: CreateTaskFormComponent}
+  {path: 'newTask', component: CreateTaskFormComponent}
 ];
 
 @NgModule({

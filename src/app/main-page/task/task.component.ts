@@ -1,7 +1,7 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {PlannedTask} from "../../model/Task";
 import {TaskApiService} from "../../services/task-api.service";
-import {Output, EventEmitter} from '@angular/core';
+import {TaskStatus} from "../../model/TaskStatus";
 
 @Component({
   selector: 'app-task',
@@ -43,12 +43,16 @@ export class TaskComponent implements OnInit {
 
   done() {
     this.taskService.done(this.task.id).subscribe(() => {
-      this.task.statusId = 2;
+      this.task.statusId = TaskStatus.DONE;
     });
 
   }
 
   isNotDone() {
-    return this.task.statusId != 2;
+    return this.task.statusId != TaskStatus.DONE;
+  }
+
+  getStatusName(status: TaskStatus): String {
+    return TaskStatus[status];
   }
 }

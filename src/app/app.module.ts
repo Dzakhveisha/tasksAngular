@@ -7,6 +7,7 @@ import { MainPageComponent } from './main-page/main-page.component';
 import { TaskComponent } from './main-page/task/task.component';
 import { CreateTaskFormComponent } from './create-task-form/create-task-form.component';
 import {HttpClientModule} from "@angular/common/http";
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -18,7 +19,9 @@ import {HttpClientModule} from "@angular/common/http";
   imports: [
     BrowserModule,
     AppRoutingModule,
-    HttpClientModule
+    HttpClientModule,
+    FormsModule,
+    ReactiveFormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]

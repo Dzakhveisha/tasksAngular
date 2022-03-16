@@ -4,7 +4,7 @@
     <p class=" taskDesc col-6">{{task.description}}</p>
     <div class=" col-1">
       <p><b>deadline:</b> {{task.deadline}}</p>
-      <p><b>status:</b> {{task.statusId}}</p>
+      <p><b>status:</b> {{getStatusName(task.statusId)}}</p>
     </div>
     <div class="col-1">
       <button *ngIf="isNotDone()" class="btn btn-success m-1" (click)="done()">
@@ -17,7 +17,7 @@
 
       <div *ngIf="hasFile()" class="files">
         <span> Additional file: </span>
-        <a href=""> {{task.fileName}}</a>
+        <a href="http://localhost:8080/tasks/{{task.id}}/file" download> {{task.fileName}}</a>
       </div>
 
   </div>

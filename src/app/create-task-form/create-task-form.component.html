@@ -1,0 +1,48 @@
+<div class="formContainer container ">
+
+  <h2 id="newCertificateTitle">Add New Task</h2>
+
+  <form [formGroup]="newTaskForm" (ngSubmit)="onSubmit()" (change)="onFormChange()"
+    id="newTaskForm" class="justify-content-center align-items-cent m-6">
+
+    <div class=" row g-3 p-2">
+      <div class="col-md-6">
+        <label for="name"> Task Name </label>
+        <input id="name" class="form-control mx-auto mb-2 mt-1" type="text"
+               required formControlName="name"/>
+      </div>
+      <div class="col-md-6">
+        <label for="deadline" > Deadline </label>
+        <input id="deadline" class="form-control mx-auto mb-2 mt-1" type="datetime-local"
+               required="required" formControlName="deadline"/>
+
+      </div>
+    </div>
+    <div class="row justify-content-end g-2 p-2">
+      <label for="file"> File </label>
+      <input id="file" type="file" formControlName="file"
+        (change)="onFileChange($event)" >
+    </div>
+
+    <div class=" row justify-content-end g-2 p-2">
+      <label for="description"> Description </label>
+      <textarea formControlName="description"
+        id="description" rows="6" class="form-control mx-auto mb-2 mt-1"></textarea>
+    </div>
+
+    <p class="error">{{ errorMessage }}</p>
+
+    <div class=" row justify-content-end g-2 p-2">
+      <div class="col-md-3">
+        <button id="newTaskCancel" class="form-control  mx-auto mb-2 mt-1" type="button">
+          Cancel
+        </button>
+      </div>
+      <div class="col-md-3">
+        <input id="saveSubmit" class="form-control mx-auto mb-2 mt-1" type="submit"
+               value="Save">
+      </div>
+    </div>
+
+  </form>
+</div>
