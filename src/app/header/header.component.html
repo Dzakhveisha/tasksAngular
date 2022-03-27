@@ -1,0 +1,41 @@
+<header>
+  <nav *ngIf="isUserLogin()" class="navbar navbar-expand-md navbar-light bg-light">
+    <div class=" container-fluid mx-3">
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+              data-bs-target="#navbarMenu"
+              aria-controls="navbarMenu" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <ul class="collapse navbar-collapse navbar-nav mx-auto justify-content-around" id="navbarMenu">
+        <li class="nav-item dropdown bd-highlight mx-2">
+          <button routerLink="tasks" class=" btn btn-outline-success nav-link dropdown-toggle" id="navbarDropdownMenuLink"
+             data-bs-toggle="dropdown" aria-expanded="false">
+            My task List
+          </button>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+            <a class="dropdown-item" routerLink="tasks">All tasks </a>
+            <a class="dropdown-item" [routerLink]="['/tasks']" [queryParams]="{status:'AWAIT'}">AWAIT tasks </a>
+            <a class="dropdown-item" routerLink="/tasks" [queryParams]="{status:'EXPIRED'}">EXPIRED tasks </a>
+            <a class="dropdown-item" routerLink="/tasks" [queryParams]="{status:'DONE'}">DONE tasks </a>
+          </ul>
+        </li>
+        <li class="nav-item bd-highlight flex-grow-1 mx-2">
+          <a id="btnNew" class="btn btn-outline-success my-3" routerLink="/tasks/new">
+            <span>Create task</span>
+          </a>
+        </li>
+        <li class="nav-item bd-highlight mx-2">
+          <a routerLink="register" class="nav-link">
+            <span class="material-icons">person_add</span>
+          </a>
+        </li>
+        <li class="nav-item bd-highlight mx-2">
+          <a (click)="logout()" routerLink="login" class="nav-link">
+            <span class="material-icons">logout</span>
+            <span class="m-1">{{getUserName()}}</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </nav>
+</header>

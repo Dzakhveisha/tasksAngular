@@ -1,24 +1,28 @@
-
-  <div class="task row d-flex justify-content-between align-items-center my-2">
-    <h3 class=" taskName col-2">{{task.name}}</h3>
-    <p class=" taskDesc col-6">{{task.description}}</p>
-    <div class=" col-1">
-      <p><b>deadline:</b> {{task.deadline}}</p>
-      <p><b>status:</b> {{getStatusName(task.statusId)}}</p>
-    </div>
-    <div class="col-1">
-      <button *ngIf="isNotDone()" class="btn btn-success m-1" (click)="done()">
-                    <span class="material-icons">done</span>
-      </button>
-      <button class="btn btn-light m-1" (click)="delete()">
-        <span class="material-icons">delete</span>
-      </button>
-    </div>
-
-      <div *ngIf="hasFile()" class="files">
-        <span> Additional file: </span>
-        <a href="http://localhost:8080/tasks/{{task.id}}/file" download> {{task.fileName}}</a>
-      </div>
-
+<div class="task row d-flex justify-content-between align-items-center my-2 border border-secondary">
+  <h3 class=" taskName col-2">{{task.name}}</h3>
+  <p class=" taskDesc col-6">{{task.description}}</p>
+  <div class=" col-1">
+    <p><b>deadline:</b> {{task.deadline}}</p>
+    <p><b>status:</b> {{getStatusName(task.statusId)}}</p>
   </div>
+  <div class="col-1">
+    <button *ngIf="isNotDone()" class="btn btn-success m-1" (click)="done()">
+      <span class="material-icons">done</span>
+    </button>
+    <button class="btn btn-outline-secondary m-1" (click)="delete()">
+      <span class="material-icons">delete</span>
+    </button>
+  </div>
+
+  <div *ngIf="hasFile()" class="files">
+    <hr>
+    <div class=" container d-flex justify-content-start m-1">
+      <div class=" bd-highlight">Additional file: {{task.fileName}}</div>
+      <button class="btn-sm btn-light mx-3" (click)="downloadFile()">
+        <span class="material-icons"> file_download </span>
+      </button>
+    </div>
+  </div>
+
+</div>
 

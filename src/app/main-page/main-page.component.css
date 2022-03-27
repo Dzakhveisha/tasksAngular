@@ -1,11 +1,8 @@
-h1{
-  text-align: center;
-}
 #btnNew{
   text-align: center;
   margin-left: 20%;
   margin-right: 20%;
 }
 #tasks{
-  padding: 50px;
+  padding: 20px;
 }

@@ -4,6 +4,9 @@ import {TaskApiService} from "../services/task-api.service";
 import {HttpErrorResponse} from "@angular/common/http";
 import {Router} from "@angular/router";
 import {Validators} from '@angular/forms';
+import {JwtHelperService} from "@auth0/angular-jwt";
+import {User} from "../modelInterface/User";
+import {AuthService} from "../services/auth-service.service";
 
 @Component({
   selector: 'app-create-task-form',
@@ -22,15 +25,23 @@ export class CreateTaskFormComponent implements OnInit {
 
   errorMessage: String = "";
 
-  constructor(private fb: FormBuilder, private  taskService: TaskApiService, private router: Router) {
+  constructor(private fb: FormBuilder, private  taskService: TaskApiService, private userService: AuthService, private router: Router) {
   }
 
   ngOnInit(): void {
+    let rawToken = localStorage.getItem("token")
+    if (rawToken !== null) {
+      const helper = new JwtHelperService();
+      if (helper.isTokenExpired(rawToken)) {
+        this.router.navigate(['/login']);
+      }
+    } else {
+      this.router.navigate(['/login']);
+    }
   }
 
 
   onFileChange(event: any) {
-    alert(event.target.files.length)
     if (event.target.files.length > 0) {
       const file = event.target.files[0];
       this.newTaskForm.patchValue({
@@ -66,22 +77,44 @@ export class CreateTaskFormComponent implements OnInit {
         formData.append('file', new File([], ""));
       }
 
-      this.taskService.create(formData)
-        .subscribe(
-          {
-            next: (newUser: Task) => {
-
-            },
-            error: (error: HttpErrorResponse) => {
-              this.errorMessage = error.message;
-            },
-            complete: () => {
-              this.router.navigate(['']);
+      let rawToken = localStorage.getItem("token")
+      if (rawToken !== null) {
+        const helper = new JwtHelperService();
+        if (helper.isTokenExpired(rawToken)) {
+          this.router.navigate(['/login']);
+        } else {
+          var decodedToken = helper.decodeToken(rawToken);
+          const name = decodedToken.sub;
+          this.userService.getUserByName(name).subscribe((user: User) => {
+            if (user.id != null) {
+              this.createTask(formData, user.id)
+            } else {
+              this.router.navigate(['/login']);
             }
-          }
-        )
-    } else {
-      this.errorMessage = "Not enough data!";
+          })
+        }
+      }
     }
+  }
+
+  private createTask(formData: FormData, id: number) {
+          this.taskService.create(formData, id)
+            .subscribe(
+              {
+                next: (newUser: Task) => {
+
+                },
+                error: (error: HttpErrorResponse) => {
+                  this.errorMessage = error.message;
+                },
+                complete: () => {
+                  this.router.navigate(['/tasks']);
+                }
+              }
+            )
+  }
+
+  cancel() {
+    this.router.navigate(['/tasks']);
   }
 }
