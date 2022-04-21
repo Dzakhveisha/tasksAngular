@@ -1,5 +1,5 @@
 <header>
-  <nav *ngIf="isUserLogin()" class="navbar navbar-expand-md navbar-light bg-light">
+  <nav class="navbar navbar-expand-md navbar-light bg-light">
     <div class=" container-fluid mx-3">
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
               data-bs-target="#navbarMenu"
@@ -22,17 +22,6 @@
         <li class="nav-item bd-highlight flex-grow-1 mx-2">
           <a id="btnNew" class="btn btn-outline-success my-3" routerLink="/tasks/new">
             <span>Create task</span>
-          </a>
-        </li>
-        <li class="nav-item bd-highlight mx-2">
-          <a routerLink="register" class="nav-link">
-            <span class="material-icons">person_add</span>
-          </a>
-        </li>
-        <li class="nav-item bd-highlight mx-2">
-          <a (click)="logout()" routerLink="login" class="nav-link">
-            <span class="material-icons">logout</span>
-            <span class="m-1">{{getUserName()}}</span>
           </a>
         </li>
       </ul>

@@ -1,9 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {TaskApiService} from "../services/task-api.service";
 import {PlannedTask} from "../modelInterface/Task";
-import {JwtHelperService} from "@auth0/angular-jwt";
-import {User} from "../modelInterface/User";
-import {AuthService} from "../services/auth-service.service";
 import {ActivatedRoute, Router} from '@angular/router'
 
 @Component({
@@ -16,7 +13,7 @@ export class MainPageComponent implements OnInit {
   tasks: PlannedTask[] = [];
   status: string | null = null;
 
-  constructor(private taskService: TaskApiService, private userService: AuthService,
+  constructor(private taskService: TaskApiService,
               private router: Router, private route: ActivatedRoute) {
   }
 
@@ -34,51 +31,16 @@ export class MainPageComponent implements OnInit {
   }
 
   getAllTasks() {
-    let rawToken = localStorage.getItem("token")
-    if (rawToken !== null) {
-      const helper = new JwtHelperService();
-      if (helper.isTokenExpired(rawToken)) {
-        this.router.navigate(['/login']);
-      } else {
-        var decodedToken = helper.decodeToken(rawToken);
-        const name = decodedToken.sub;
-        this.userService.getUserByName(name).subscribe((user: User) => {
-          if (user.id != null) {
-            this.taskService.getTasks(user.id)
-              .subscribe((result: PlannedTask[]) =>
-                this.tasks = result);
-          } else {
-            this.router.navigate(['/login']);
-          }
-        })
-      }
-    } else {
-      this.router.navigate(['/login']);
-    }
+    this.taskService.getTasks()
+      .subscribe((result: PlannedTask[]) => {
+        this.tasks = result
+      });
   }
 
   updateTasksByStatus(status: string) {
-    let rawToken = localStorage.getItem("token")
-    if (rawToken !== null) {
-      const helper = new JwtHelperService();
-      if (helper.isTokenExpired(rawToken)) {
-        this.router.navigate(['/login']);
-      } else {
-        var decodedToken = helper.decodeToken(rawToken);
-        const name = decodedToken.sub;
-        this.userService.getUserByName(name).subscribe((user: User) => {
-          if (user.id != null) {
-            this.taskService.getTasksByStatus(status, user.id)
-              .subscribe((result: PlannedTask[]) =>
-                this.tasks = result);
-          } else {
-            this.router.navigate(['/login']);
-          }
-        })
-      }
-    } else {
-      this.router.navigate(['/login']);
-    }
+    this.taskService.getTasksByStatus(status)
+      .subscribe((result: PlannedTask[]) =>
+        this.tasks = result);
   }
 
   deleteTask(task: PlannedTask) {

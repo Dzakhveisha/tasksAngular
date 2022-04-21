@@ -3,7 +3,7 @@
   <p class=" taskDesc col-6">{{task.description}}</p>
   <div class=" col-1">
     <p><b>deadline:</b> {{task.deadline}}</p>
-    <p><b>status:</b> {{getStatusName(task.statusId)}}</p>
+    <p><b>status:</b> {{task.status}}</p>
   </div>
   <div class="col-1">
     <button *ngIf="isNotDone()" class="btn btn-success m-1" (click)="done()">

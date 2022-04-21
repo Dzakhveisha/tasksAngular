@@ -4,7 +4,7 @@ export interface PlannedTask{
   id : number;
   name: string;
   description: string;
-  statusId: TaskStatus;
+  status: TaskStatus;
   deadline: string;
   fileName: string;
 }

@@ -1,8 +1,21 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders} from "@angular/common/http";
 // @ts-ignore
-import {Observable} from "rxjs";
+import {map, Observable} from "rxjs";
 import {PlannedTask} from "../modelInterface/Task";
+import {Apollo, gql} from "apollo-angular";
+
+const homePageQuery = gql
+  `query{
+    tasks{
+        id
+        name
+        description
+        deadline
+        status
+        fileName
+    }
+}`;
 
 @Injectable({
   providedIn: 'root'
@@ -11,8 +24,9 @@ export class TaskApiService {
 
   private readonly url = 'http://localhost:8080/api/v1/tasks';  // URL to web api for getting tasks
   private readonly statusParameter = '&status='
-  private readonly userIdParameter = '&id='
   private readonly taskParameter = '&task='
+  private readonly userIdParameter = '&userId='
+
 
 
   private readonly httpOptionsWithAuth = {
@@ -26,16 +40,20 @@ export class TaskApiService {
   };
 
 
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient, private apollo: Apollo) {
   }
 
-  getTasks(id: number): Observable<PlannedTask[]> {
-    return this.http.get <PlannedTask[]>(this.url + '?' + this.userIdParameter + id, this.httpOptionsWithAuth);
+  getTasks(): Observable<PlannedTask[]> {
+    return this.apollo
+      .watchQuery({query: homePageQuery})
+      .valueChanges
+      // @ts-ignore
+
+      .pipe(map(result => result['data']['tasks']));
   }
 
-  getTasksByStatus(status: string, id: number) {
-    return this.http.get <PlannedTask[]>(this.url + '?' + this.statusParameter + status
-      + this.userIdParameter + id, this.httpOptionsWithAuth);
+  getTasksByStatus(status: string) {
+    return this.http.get <PlannedTask[]>(this.url + '?' + this.statusParameter + status, this.httpOptionsWithAuth);
   }
 
   delete(id: number): Observable<any> {

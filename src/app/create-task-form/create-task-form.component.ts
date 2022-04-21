@@ -4,9 +4,6 @@ import {TaskApiService} from "../services/task-api.service";
 import {HttpErrorResponse} from "@angular/common/http";
 import {Router} from "@angular/router";
 import {Validators} from '@angular/forms';
-import {JwtHelperService} from "@auth0/angular-jwt";
-import {User} from "../modelInterface/User";
-import {AuthService} from "../services/auth-service.service";
 
 @Component({
   selector: 'app-create-task-form',
@@ -25,19 +22,10 @@ export class CreateTaskFormComponent implements OnInit {
 
   errorMessage: String = "";
 
-  constructor(private fb: FormBuilder, private  taskService: TaskApiService, private userService: AuthService, private router: Router) {
+  constructor(private fb: FormBuilder, private  taskService: TaskApiService, private router: Router) {
   }
 
   ngOnInit(): void {
-    let rawToken = localStorage.getItem("token")
-    if (rawToken !== null) {
-      const helper = new JwtHelperService();
-      if (helper.isTokenExpired(rawToken)) {
-        this.router.navigate(['/login']);
-      }
-    } else {
-      this.router.navigate(['/login']);
-    }
   }
 
 
@@ -76,42 +64,26 @@ export class CreateTaskFormComponent implements OnInit {
       } else {
         formData.append('file', new File([], ""));
       }
-
-      let rawToken = localStorage.getItem("token")
-      if (rawToken !== null) {
-        const helper = new JwtHelperService();
-        if (helper.isTokenExpired(rawToken)) {
-          this.router.navigate(['/login']);
-        } else {
-          var decodedToken = helper.decodeToken(rawToken);
-          const name = decodedToken.sub;
-          this.userService.getUserByName(name).subscribe((user: User) => {
-            if (user.id != null) {
-              this.createTask(formData, user.id)
-            } else {
-              this.router.navigate(['/login']);
-            }
-          })
-        }
-      }
+      this.createTask(formData)
     }
   }
 
-  private createTask(formData: FormData, id: number) {
-          this.taskService.create(formData, id)
-            .subscribe(
-              {
-                next: (newUser: Task) => {
 
-                },
-                error: (error: HttpErrorResponse) => {
-                  this.errorMessage = error.message;
-                },
-                complete: () => {
-                  this.router.navigate(['/tasks']);
-                }
-              }
-            )
+  private createTask(formData: FormData) {
+    this.taskService.create(formData, 1)
+      .subscribe(
+        {
+          next: (newUser: Task) => {
+
+          },
+          error: (error: HttpErrorResponse) => {
+            this.errorMessage = error.message;
+          },
+          complete: () => {
+            this.router.navigate(['/tasks']);
+          }
+        }
+      )
   }
 
   cancel() {

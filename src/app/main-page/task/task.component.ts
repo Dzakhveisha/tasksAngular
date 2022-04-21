@@ -23,7 +23,7 @@ export class TaskComponent implements OnInit {
       fileName: "",
       description: "",
       deadline: "",
-      statusId: 0,
+      status: 0,
     }
   }
 
@@ -43,17 +43,13 @@ export class TaskComponent implements OnInit {
 
   done() {
     this.taskService.done(this.task.id).subscribe(() => {
-      this.task.statusId = TaskStatus.DONE;
+      this.task.status= TaskStatus.DONE;
     });
 
   }
 
   isNotDone() {
-    return this.task.statusId != TaskStatus.DONE;
-  }
-
-  getStatusName(status: TaskStatus): String {
-    return TaskStatus[status];
+    return this.task.status != TaskStatus.DONE;
   }
 
   downloadFile(){
