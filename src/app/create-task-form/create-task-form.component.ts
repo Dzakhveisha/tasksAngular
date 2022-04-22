@@ -4,6 +4,7 @@ import {TaskApiService} from "../services/task-api.service";
 import {HttpErrorResponse} from "@angular/common/http";
 import {Router} from "@angular/router";
 import {Validators} from '@angular/forms';
+import {PlannedTask} from "../modelInterface/Task";
 
 @Component({
   selector: 'app-create-task-form',
@@ -21,8 +22,10 @@ export class CreateTaskFormComponent implements OnInit {
   });
 
   errorMessage: String = "";
+  private taskId: number = 0;
 
   constructor(private fb: FormBuilder, private  taskService: TaskApiService, private router: Router) {
+
   }
 
   ngOnInit(): void {
@@ -70,17 +73,28 @@ export class CreateTaskFormComponent implements OnInit {
 
 
   private createTask(formData: FormData) {
-    this.taskService.create(formData, 1)
+    alert(this.newTaskForm.get('fileSource')?.value)
+    this.taskService.create(formData)
       .subscribe(
         {
-          next: (newUser: Task) => {
-
+          next: (task: PlannedTask) => {
+            this.taskId = task.id;
           },
           error: (error: HttpErrorResponse) => {
             this.errorMessage = error.message;
           },
           complete: () => {
-            this.router.navigate(['/tasks']);
+            this.taskService.uploadFile(this.taskId, formData)
+              .subscribe({
+                error: (error: HttpErrorResponse) => {
+                  this.errorMessage = error.message;
+                },
+                complete: () => {
+                  this.router.navigate(['/tasks']).then(() => {
+                    window.location.reload();
+                  });
+                }
+              })
           }
         }
       )

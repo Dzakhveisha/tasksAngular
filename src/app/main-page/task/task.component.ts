@@ -35,8 +35,8 @@ export class TaskComponent implements OnInit {
   }
 
   delete() {
-    this.taskService.delete(this.task.id).subscribe(() => {
-      this.deleteTaskEvent.emit(this.task);
+    this.taskService.delete(this.task.id).subscribe((task: PlannedTask) => {
+      this.deleteTaskEvent.emit(task);
     });
 
   }
@@ -67,14 +67,5 @@ export class TaskComponent implements OnInit {
           downloadLink.click();
         }
       )
-  }
-
-  downLoadFile(data: any, type: string) {
-    let blob = new Blob([data], { type: type});
-    let url = window.URL.createObjectURL(blob);
-    let pwa = window.open(url);
-    if (!pwa || pwa.closed || typeof pwa.closed == 'undefined') {
-      alert( 'Please disable your Pop-up blocker and try again.');
-    }
   }
 }

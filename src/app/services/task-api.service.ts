@@ -17,28 +17,63 @@ const homePageQuery = gql
     }
 }`;
 
+const getTaskByStatusQuery = gql
+  `query($status: TaskStatus!) {
+    tasksByStatus( status: $status){
+        id
+        name
+        description
+        deadline
+        status
+        fileName
+    }
+}`;
+
+const createTaskMutation = gql
+  `mutation($name: String!,
+     $description: String,
+     $deadline: String!) {
+    createTask( name: $name, deadline: $deadline,
+    description: $description){
+        id
+        name
+        description
+        deadline
+        status
+        fileName
+    }
+}`;
+
+const deleteTaskMutation = gql
+  `mutation deleteTask($id: ID!) {
+    deleteTask( id: $id){
+        id
+        name
+        description
+        deadline
+        status
+        fileName
+    }
+}`;
+
+const doneTaskMutation = gql
+  `mutation doneTask($id: ID!) {
+    doneTask( id: $id){
+        id
+        status
+    }
+}`;
+
 @Injectable({
   providedIn: 'root'
 })
 export class TaskApiService {
 
-  private readonly url = 'http://localhost:8080/api/v1/tasks';  // URL to web api for getting tasks
-  private readonly statusParameter = '&status='
-  private readonly taskParameter = '&task='
-  private readonly userIdParameter = '&userId='
-
-
-
-  private readonly httpOptionsWithAuth = {
-    headers: new HttpHeaders({'Content-Type': 'application/json',
-      'Authorization': "Bearer " + localStorage.getItem("token")})
-  };
+  private readonly url = 'http://localhost:8080/tasks';  // URL to web api for getting tasks
 
   private readonly httpOptions = {
-    headers: new HttpHeaders({
-      'Authorization': "Bearer " + localStorage.getItem("token")})
+    headers: new HttpHeaders({'Content-Type': 'application/json'})
   };
-
 
   constructor(private http: HttpClient, private apollo: Apollo) {
   }
@@ -48,31 +83,54 @@ export class TaskApiService {
       .watchQuery({query: homePageQuery})
       .valueChanges
       // @ts-ignore
-
       .pipe(map(result => result['data']['tasks']));
   }
 
   getTasksByStatus(status: string) {
-    return this.http.get <PlannedTask[]>(this.url + '?' + this.statusParameter + status, this.httpOptionsWithAuth);
+    return this.apollo
+      .watchQuery({query: getTaskByStatusQuery, variables: {status: status}})
+      .valueChanges
+      // @ts-ignore
+      .pipe(map(result => result['data']['tasksByStatus']));
   }
 
   delete(id: number): Observable<any> {
-    return this.http.delete(this.url + '/' + id.toString(10), this.httpOptionsWithAuth);
+    return this.apollo.mutate({
+      mutation: deleteTaskMutation, variables:
+        {id: id}
+    })
+      // @ts-ignore
+      .pipe(map(result => result['data']['deleteTask']));
   }
 
   done(id: number): Observable<any> {
-    return this.http.put(this.url + '/' + id.toString(10), "", this.httpOptionsWithAuth);
+    return this.apollo.mutate({
+      mutation: doneTaskMutation, variables:
+        {id: id}
+    })
+      // @ts-ignore
+      .pipe(map(result => result['data']['doneTask']));
   }
 
-  create(data: FormData, id: number): Observable<any> {
-    return this.http.post(this.url  + '?' + this.userIdParameter + id,
-      data, this.httpOptions);
+  create(data: FormData): Observable<any> {
+    return this.apollo.mutate({
+      mutation: createTaskMutation, variables: {
+        name: data.get("name"),
+        description: data.get("description"), deadline: data.get("deadline"), filename: data.get("file")
+      }
+    })
+      // @ts-ignore
+      .pipe(map(result => result['data']['createTask']));
+  }
+
+  uploadFile(id: number, data: FormData): Observable<any> {
+    return this.http.post(this.url + '/' + id.toString(10) + '/file', data);
   }
 
   getFile(id: number): Observable<Blob> {
-    const headers = new HttpHeaders().set('authorization','Bearer '+ localStorage.getItem("token"));
+    const headers = new HttpHeaders().set('authorization', 'Bearer ' + localStorage.getItem("token"));
 
     return this.http.get<Blob>(this.url + "/" + id + "/file",
-    {headers, responseType: 'blob' as 'json'});
+      {headers, responseType: 'blob' as 'json'});
   }
 }

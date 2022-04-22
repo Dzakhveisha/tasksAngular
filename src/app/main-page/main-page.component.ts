@@ -39,13 +39,17 @@ export class MainPageComponent implements OnInit {
 
   updateTasksByStatus(status: string) {
     this.taskService.getTasksByStatus(status)
-      .subscribe((result: PlannedTask[]) =>
-        this.tasks = result);
+      .subscribe((result: PlannedTask[]) => {
+        this.tasks = result
+      })
   }
 
   deleteTask(task: PlannedTask) {
+    let newTasks: PlannedTask[] = [];
     this.tasks.forEach((el, i) => {
-      if (el.id == task.id) this.tasks.splice(i, 1)
+      if (el.id != task.id)
+        newTasks.push(el)
     })
+    this.tasks = newTasks;
   }
 }
